@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            text-align: center;
+        }
+        img{
+            height: 30px;
+            width: 30px;
+            display: block;
+        }
+
+        td {
+            height: 30px;
+            width: 30px;
+        }
+
+        div {
+            position: fixed;
+            top: 0;
+        }
+
+        input{
+            border: black solid 1px;
+        }
+
+        table{
+            margin: 50px;
+            border-collapse: collapse;
+        }
+
+        .orientation-0 {
+            transform: rotate(0deg);
+        }
+
+        .orientation-1 {
+            transform: rotate(90deg);
+        }
+
+        .orientation-2 {
+            transform: rotate(180deg);
+        }
+
+        .orientation-3 {
+            transform: rotate(270deg);
+        }
+    </style>
+</head>
+<body>
+<div>
+    <input type="text">
+    <button id="ok">OK</button>
+    <button id="clear">clear</button>
+</div>
+<table>
+    
+</table>
+</body>
+<script>
+    document.querySelector('button#ok').addEventListener('click', readTextFile);
+    document.querySelector('button#clear').addEventListener('click', reset);
+
+    function reset() {
+        let table = document.querySelector('table');
+        table.innerHTML = ''
+    }
+
+    function readTextFile() {
+        let file = document.querySelector('input').value;
+        let rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function () {
+            if(rawFile.readyState === 4) {
+                if(rawFile.status === 200 || rawFile.status == 0) {
+                    loadTable(rawFile.responseText)
+                } else {
+                    alert('file not found')
+                }
+            }
+        };
+        rawFile.send(null);
+    }
+    
+    function loadTable(data) {
+        let table = document.querySelector('table');
+        let lines = data.split('\n');
+        lines.pop();
+        lines.forEach((line) => {
+            let tr = document.createElement('tr');
+            table.appendChild(tr);
+            let row = line.split('-');
+            row.forEach((value) => {
+                let td = document.createElement('td');
+                if (value === "x") {
+                    td.textContent = 'X'
+                } else {
+                    value = value.split('(');
+                    let id = value[0];
+                    let orientation = value[1].slice(0, -1);
+                    let img = document.createElement('img');
+                    img.setAttribute('src', `./assets/${id}.png`);
+                    img.setAttribute('class', `orientation-${orientation}`);
+                    td.appendChild(img)
+                }
+                tr.appendChild(td)
+            });
+            table.appendChild(tr)
+        });
+        let separation = document.createElement('tr');
+        separation.setAttribute('style', 'height: 30px');
+        table.appendChild(separation)
+    }
+</script>
+</html>
