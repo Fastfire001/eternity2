@@ -26,14 +26,6 @@ class Piece:
         if self.orientation == 4:
             self.orientation = 0
 
-    # def get_pos(self):
-    #     return (
-    #         Piece(self.top, self.bottom, self.left, self.right),
-    #         Piece(self.left, self.right, self.bottom, self.top),
-    #         Piece(self.bottom, self.top, self.right, self.left),
-    #         Piece(self.right, self.left, self.top, self.bottom)
-    #     )
-
 
 class Board:
     board = []
@@ -83,7 +75,7 @@ class Board:
                     if row == 'x':
                         result += row + '-'
                     else:
-                        result += str(row.id) + '(' + str(row.orientation) + ')' + '-'
+                        result += str(row.id - 1) + '(' + str(row.orientation) + ')' + '-'
                 file.write(result[:-1] + '\n')
         self.nextFile += 1
 

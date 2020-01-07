@@ -101,7 +101,7 @@
                     td.textContent = 'X'
                 } else {
                     value = value.split('(');
-                    let id = value[0];
+                    let id = parseInt(value[0]) + 1;
                     let orientation = value[1].slice(0, -1);
                     let img = document.createElement('img');
                     img.setAttribute('src', `./assets/${id}.png`);
