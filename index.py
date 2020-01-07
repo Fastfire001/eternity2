@@ -32,6 +32,7 @@ class Board:
     resultPath = './result/'
     nextFile = 1
     pieces = {}
+    border_pieces = {}
     best_result_x = 0
     best_result_y = 0
 
@@ -63,7 +64,10 @@ class Board:
             counter = 1
             while line:
                 pieces = line.split(' ')
-                self.pieces[counter] = Piece(int(pieces[0]), int(pieces[1]), int(pieces[2]), int(pieces[3][:-1]), counter)
+                if pieces[0] == 'x' or pieces[1] == 'x' or pieces[2] == 'x' or pieces[3][:-1] == 'x':
+                    self.border_pieces[counter] = Piece(int(pieces[0]), int(pieces[1]), int(pieces[2]), int(pieces[3][:-1]), counter)
+                else:
+                    self.pieces[counter] = Piece(int(pieces[0]), int(pieces[1]), int(pieces[2]), int(pieces[3][:-1]), counter)
                 line = file.readline()
                 counter += 1
 
@@ -134,6 +138,13 @@ class Board:
             'right': right,
         }
 
+    def is_best_result_tmp(self, x, y):
+        if y > self.best_result_y:
+            return True
+        if y == self.best_result_y and x > self.best_result_x:
+            return True
+        return False
+
     def is_best_result(self, x, y):
         if y < self.best_result_y:
             return False
@@ -156,30 +167,35 @@ class Board:
             self.try_win_two_million(next_x, next_y)
             return
         needed = self.get_needed_side(x, y)
-        for piece_id in self.pieces:
+        if needed == 0 or needed == 0 or needed == 0 or needed == 0:
+            border = True
+            pieces = self.border_pieces
+        else:
+            border = False
+            pieces = self.pieces
+        for piece_id in pieces:
             for _ in range(4):
-                piece = self.pieces[piece_id]
+                piece = pieces[piece_id]
                 if piece.top == needed['top'] or (needed['top'] == 'x' and not piece.top == 0):
                     if piece.bottom == needed['bottom'] or (needed['bottom'] == 'x' and not piece.bottom == 0):
                         if piece.left == needed['left'] or (needed['left'] == 'x' and not piece.left == 0):
                             if piece.right == needed['right'] or (needed['right'] == 'x' and not piece.right == 0):
                                 self.board[y][x] = piece
-                                del self.pieces[piece.id]
+                                if border:
+                                    del self.border_pieces[piece_id]
+                                else:
+                                    del self.pieces[piece.id]
                                 if self.is_best_result(x, y):
                                     self.export()
                                     self.best_result_x = x
                                     self.best_result_y = y
                                 self.try_win_two_million(next_x, next_y)
-                                self.pieces[piece.id] = piece
+                                if border:
+                                    self.border_pieces[piece.id] = piece
+                                else:
+                                    self.pieces[piece.id] = piece
+
                                 self.board[y][x] = 'x'
-                                # if y == 8 and x == 7:
-                                #     print(piece_id)
-                                #     print(piece.top, piece.bottom, piece.left, piece.right)
-                                #     print(self.pieces)
-                                #     exit()
-                                #     self.board[y][x] = self.pieces[139]
-                                #     del self.pieces[139]
-                                #     return
                 piece.move_orientation()
 
 
