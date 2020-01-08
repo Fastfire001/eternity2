@@ -72,15 +72,20 @@ class Board:
                 counter += 1
 
     def export(self):
+        counter = 0
         with open(self.resultPath + '/' + str(self.nextFile) + '.txt', 'w') as file:
             for line in self.board:
                 result = ''
                 for row in line:
                     if row == 'x':
-                        result += row + '-'
+                        result += 'X-'
                     else:
                         result += str(row.id - 1) + '(' + str(row.orientation) + ')' + '-'
-                file.write(result[:-1] + '\n')
+                if counter < 15:
+                    file.write(result[:-1] + '\n')
+                else:
+                    file.write(result[:-1])
+                counter += 1
         self.nextFile += 1
 
     def fill_randomly(self):
