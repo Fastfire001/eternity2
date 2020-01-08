@@ -150,18 +150,18 @@ class Board:
             return True
         return False
 
-    def try_win_two_million(self, x, y):
+    def resolve(self, x, y):
         next_x = x + 1
         next_y = y
         if next_x == 16:
             next_x = 0
             next_y = y + 1
             if next_y == 16:
-                print("You win 2 million")
+                print("Gg!")
                 self.export()
                 exit()
         if not self.board[y][x] == 'x':
-            self.try_win_two_million(next_x, next_y)
+            self.resolve(next_x, next_y)
             return
         needed = self.get_needed_side(x, y)
         if needed == 0 or needed == 0 or needed == 0 or needed == 0:
@@ -186,7 +186,7 @@ class Board:
                                     self.export()
                                     self.best_result_x = x
                                     self.best_result_y = y
-                                self.try_win_two_million(next_x, next_y)
+                                self.resolve(next_x, next_y)
                                 if border:
                                     self.border_pieces[piece.id] = piece
                                 else:
@@ -202,7 +202,7 @@ class Board:
 
 
 a = Board()
-a.try_win_two_million(0, 0)
+a.resolve(0, 0)
 # print(a.get_needed_side(0, 0))
 # a.fillRandomly()
 # a.export()
