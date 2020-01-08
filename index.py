@@ -143,20 +143,12 @@ class Board:
             'right': right,
         }
 
-    def is_best_result_tmp(self, x, y):
+    def is_best_result(self, x, y):
         if y > self.best_result_y:
             return True
         if y == self.best_result_y and x > self.best_result_x:
             return True
         return False
-
-    def is_best_result(self, x, y):
-        if y < self.best_result_y:
-            return False
-        if x < self.best_result_x:
-            return False
-        return True
-
 
     def try_win_two_million(self, x, y):
         next_x = x + 1
